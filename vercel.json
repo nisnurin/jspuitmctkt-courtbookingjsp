@@ -1,0 +1,11 @@
+{
+  "framework": null,
+  "buildCommand": "echo Using committed Flutter web bundle",
+  "outputDirectory": "build/web",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
