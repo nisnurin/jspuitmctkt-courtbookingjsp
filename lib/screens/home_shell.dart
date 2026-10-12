@@ -9,9 +9,7 @@ import 'dashboard_screen.dart';
 import 'timetable_screen.dart';
 
 class HomeShell extends StatefulWidget {
-  final VoidCallback? onToggleTheme;
-  final bool isDark;
-  const HomeShell({super.key, this.onToggleTheme, this.isDark = true});
+  const HomeShell({super.key});
   @override
   State<HomeShell> createState() => _HomeShellState();
 }
@@ -113,7 +111,6 @@ class _HomeShellState extends State<HomeShell> {
                     maxLines: 1, overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontSize: 12, color: C.muted)),
                 const SizedBox(height: 8),
-                if (widget.onToggleTheme != null) GhostButton(label: widget.isDark ? 'Light mode' : 'Dark mode', icon: widget.isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded, color: C.muted, onPressed: widget.onToggleTheme),
                 SizedBox(
                     width: double.infinity,
                     child: GhostButton(
@@ -132,7 +129,6 @@ class _HomeShellState extends State<HomeShell> {
         titleSpacing: 16,
         title: _logo(),
         actions: [
-          if (widget.onToggleTheme != null) IconButton(tooltip: widget.isDark ? 'Light mode' : 'Dark mode', onPressed: widget.onToggleTheme, icon: Icon(widget.isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded)),
           IconButton(tooltip: 'Sign out', onPressed: _logout, icon: const Icon(Icons.logout_rounded)),
           const SizedBox(width: 4),
         ],

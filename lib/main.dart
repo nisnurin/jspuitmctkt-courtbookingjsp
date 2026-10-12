@@ -19,38 +19,25 @@ Future<void> main() async {
   runApp(const CourtApp());
 }
 
-class CourtApp extends StatefulWidget {
+class CourtApp extends StatelessWidget {
   const CourtApp({super.key});
-
-  @override
-  State<CourtApp> createState() => _CourtAppState();
-}
-
-class _CourtAppState extends State<CourtApp> {
-  ThemeMode _mode = ThemeMode.dark;
-
-  void _toggleTheme() => setState(() => _mode = _mode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'JSP Court Booking · UiTM Kuala Terengganu',
       debugShowCheckedModeBanner: false,
-      theme: buildTheme(light: true),
-      darkTheme: buildTheme(),
-      themeMode: _mode,
+      theme: buildTheme(),
+      themeMode: ThemeMode.dark,
       home: AppConfig.isConfigured
-          ? _AuthGate(onToggleTheme: _toggleTheme, isDark: _mode == ThemeMode.dark)
+          ? const _AuthGate()
           : const SetupScreen(),
     );
   }
 }
 
 class _AuthGate extends StatelessWidget {
-  final VoidCallback onToggleTheme;
-  final bool isDark;
-
-  const _AuthGate({required this.onToggleTheme, required this.isDark});
+  const _AuthGate();
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +51,8 @@ class _AuthGate extends StatelessWidget {
                 onLogin: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => const LoginScreen()),
                 ),
-                onToggleTheme: onToggleTheme,
-                isDark: isDark,
               )
-            : HomeShell(onToggleTheme: onToggleTheme, isDark: isDark);
+            : const HomeShell();
       },
     );
   }

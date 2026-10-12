@@ -6,9 +6,8 @@ import '../theme.dart';
 import '../utils.dart';
 
 class PublicTimetable extends StatefulWidget {
-  final VoidCallback onLogin, onToggleTheme;
-  final bool isDark;
-  const PublicTimetable({super.key, required this.onLogin, required this.onToggleTheme, required this.isDark});
+  final VoidCallback onLogin;
+  const PublicTimetable({super.key, required this.onLogin});
   @override
   State<PublicTimetable> createState() => _PublicTimetableState();
 }
@@ -40,18 +39,25 @@ class _PublicTimetableState extends State<PublicTimetable> {
       appBar: AppBar(
         title: Row(children: [const Icon(Icons.sports_basketball_rounded, color: C.orange), const SizedBox(width: 10), const Flexible(child: Text('JSP Courts', style: TextStyle(fontWeight: FontWeight.w800)))]),
         actions: [
-          IconButton(tooltip: widget.isDark ? 'Switch to light mode' : 'Switch to dark mode', onPressed: widget.onToggleTheme, icon: Icon(widget.isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded)),
           if (MediaQuery.sizeOf(context).width > 520) TextButton.icon(onPressed: widget.onLogin, icon: const Icon(Icons.login_rounded), label: const Text('Log in')) else IconButton(tooltip: 'Log in', onPressed: widget.onLogin, icon: const Icon(Icons.login_rounded)),
           const SizedBox(width: 8),
         ],
       ),
-      body: SafeArea(child: Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 1100), child: ListView(padding: const EdgeInsets.all(18), children: [
+      body: SafeArea(child: LayoutBuilder(builder: (context, constraints) => Center(child: SizedBox(width: constraints.maxWidth < 1100 ? constraints.maxWidth : 1100, child: ListView(padding: const EdgeInsets.all(18), children: [
         Text('Court timetable', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800)),
         const SizedBox(height: 4),
         Text('Check weekly availability for Court Kolej and Court Kampus. Sign in to make a booking.', style: TextStyle(color: cs.onSurface.withValues(alpha: .68))),
         const SizedBox(height: 18),
         Wrap(alignment: WrapAlignment.spaceBetween, crossAxisAlignment: WrapCrossAlignment.center, spacing: 12, runSpacing: 12, children: [
-          SegmentedButton<String>(segments: [for (final c in AppConfig.courts) ButtonSegment(value: c, label: Text(c), icon: Icon(courtIcon(c)))], selected: {_court}, onSelectionChanged: (v) => setState(() => _court = v.first)),
+          Row(mainAxisSize: MainAxisSize.min, children: [
+            for (final c in AppConfig.courts)
+              Padding(padding: const EdgeInsets.only(right: 8), child: ChoiceChip(
+                avatar: Icon(courtIcon(c), size: 18),
+                label: Text(c, maxLines: 1, softWrap: false),
+                selected: _court == c,
+                onSelected: (_) => setState(() => _court = c),
+              )),
+          ]),
           Row(mainAxisSize: MainAxisSize.min, children: [IconButton(onPressed: () { setState(() => _anchor = _anchor.subtract(const Duration(days: 7))); _load(); }, icon: const Icon(Icons.chevron_left)), Text('${DateFormat('d MMM').format(_start)} – ${DateFormat('d MMM yyyy').format(_start.add(const Duration(days: 6)))}', style: const TextStyle(fontWeight: FontWeight.w700)), IconButton(onPressed: () { setState(() => _anchor = _anchor.add(const Duration(days: 7))); _load(); }, icon: const Icon(Icons.chevron_right)), TextButton(onPressed: () { setState(() => _anchor = dateOnly(DateTime.now())); _load(); }, child: const Text('Today'))]),
         ]),
         const SizedBox(height: 12),
@@ -66,7 +72,7 @@ class _PublicTimetableState extends State<PublicTimetable> {
         FilledButton.icon(onPressed: widget.onLogin, icon: const Icon(Icons.login_rounded), label: const Text('Log in to book a court')),
         const SizedBox(height: 10),
         Center(child: Text('Availability only · booking details are private', style: TextStyle(color: cs.onSurface.withValues(alpha:.58), fontSize: 12))),
-      ])))),
+      ]))))),
     );
   }
 

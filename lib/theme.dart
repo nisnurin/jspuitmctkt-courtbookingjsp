@@ -30,15 +30,12 @@ Color courtColor(String court) =>
 IconData courtIcon(String court) =>
     court == AppConfig.courtKolej ? Icons.apartment_rounded : Icons.school_rounded;
 
-ThemeData buildTheme({bool light = false}) {
+ThemeData buildTheme() {
   final base = ThemeData(
-    brightness: light ? Brightness.light : Brightness.dark,
+    brightness: Brightness.dark,
     useMaterial3: true,
-    scaffoldBackgroundColor: light ? const Color(0xFFF5F6FA) : C.bg,
-    colorScheme: light ? const ColorScheme.light(
-      primary: C.orange, onPrimary: Colors.white, secondary: Color(0xFF087F8C),
-      surface: Colors.white, onSurface: Color(0xFF1A1D27), error: Color(0xFFB42318),
-    ) : const ColorScheme.dark(
+    scaffoldBackgroundColor: C.bg,
+    colorScheme: const ColorScheme.dark(
       primary: C.orange,
       onPrimary: C.onAccent,
       secondary: C.cyan,
@@ -48,10 +45,7 @@ ThemeData buildTheme({bool light = false}) {
     ),
   );
   final text = GoogleFonts.poppinsTextTheme(base.textTheme)
-      .apply(
-        bodyColor: light ? const Color(0xFF1A1D27) : C.text,
-        displayColor: light ? const Color(0xFF1A1D27) : C.text,
-      );
+      .apply(bodyColor: C.text, displayColor: C.text);
 
   OutlineInputBorder b(Color c, [double w = 1]) => OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
