@@ -34,6 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await Supabase.instance.client.auth
           .signInWithPassword(email: _email.text.trim(), password: _pass.text);
+      if (mounted && Navigator.of(context).canPop()) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) setState(() => _error = friendlyError(e));
     } finally {

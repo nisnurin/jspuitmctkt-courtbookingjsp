@@ -37,8 +37,14 @@ drop policy if exists "jsp read"   on public.bookings;
 drop policy if exists "jsp insert" on public.bookings;
 drop policy if exists "jsp update" on public.bookings;
 drop policy if exists "jsp delete" on public.bookings;
+drop policy if exists "public availability read" on public.bookings;
 
 create policy "jsp read"   on public.bookings for select to authenticated using (true);
+create policy "public availability read" on public.bookings for select to anon using (true);
 create policy "jsp insert" on public.bookings for insert to authenticated with check (true);
 create policy "jsp update" on public.bookings for update to authenticated using (true) with check (true);
 create policy "jsp delete" on public.bookings for delete to authenticated using (true);
+
+-- Anonymous clients can read availability fields only; identity and notes remain private.
+revoke select on public.bookings from anon;
+grant select (court, booking_date, start_hour, end_hour) on public.bookings to anon;

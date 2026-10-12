@@ -24,6 +24,15 @@ class BookingService {
     return rows.map<Booking>((r) => Booking.fromMap(r)).toList();
   }
 
+  /// Public, availability-only data. Never returns names, phone numbers, or notes.
+  static Future<List<Map<String, dynamic>>> publicRange(DateTime from, DateTime to) async {
+    final rows = await _db.from('bookings')
+        .select('court,booking_date,start_hour,end_hour')
+        .gte('booking_date', dKey(from)).lte('booking_date', dKey(to))
+        .order('booking_date').order('start_hour');
+    return rows.map<Map<String, dynamic>>((r) => Map<String, dynamic>.from(r)).toList();
+  }
+
   static Future<void> create({
     required String court,
     required DateTime date,
